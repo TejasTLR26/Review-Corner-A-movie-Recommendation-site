@@ -1,0 +1,21 @@
+delimiter $$
+create procedure get(inout result varchar(4000))
+begin
+declare finished int default 0;
+declare getd cursor for select * from caudit;
+declare continue handler for not found set finished=1;
+declare tempid int;
+declare tempd timestamp;
+open getd;
+myloop:loop
+fetch getd into tempid,tempd;
+if(finished=1)
+leave myloop;
+end if;
+set result=concat(result,tempid," ");
+set result=concat(result,tempd,", ");
+end loop myloop;
+close getd;
+end$$
+
+delimiter ;
